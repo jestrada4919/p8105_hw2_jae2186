@@ -36,4 +36,34 @@ trash_wheel <-
 ```
 
 
+The following code chunk reads, cleans, and combines precipitation data availble for 2018 and 2019.
+
+```{r precip_data}
+
+precip2019 <-
+  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
+                    range = "A2:B15",
+                    sheet = 4)  %>% 
+  janitor::clean_names() %>% 
+  drop_na() %>% 
+  rename(precip_in = total) %>% 
+  mutate (month = month.name[month], year = "2019") %>% 
+  relocate(year)
+
+precip2018 <-
+  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
+                    range = "A2:B15",
+                    sheet = 5)  %>% 
+  janitor::clean_names() %>% 
+  drop_na() %>% 
+  rename(precip_in = total) %>% 
+  mutate (month = month.name[month], year = "2018") %>% 
+  relocate(year)
+
+all_precip <- bind_rows(precip2018, precip2019)
+
+```
+
+
+
 
