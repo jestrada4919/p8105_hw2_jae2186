@@ -12,6 +12,28 @@ library(tidyverse)
 ```
 
 ## Problem 1
-```{r setup, include=FALSE}
+
+The following code chunk uploads the publicly available data of Mr. Trashwheel from May 2014 through June 2019 in an Excel spreadsheet format. 
+
+The following changes have been made to the dataset:
+
+* non-data entries are omitted (i.e. rows with notes/figures and columns containing notes),
+* reasonable variable names have been applied, 
+* rows that do not include dumpster-specific data are omitted, and
+* the number of `sports_balls` is rounded to the nearest integer.
+
+
+```{r datat_setup}
+
+trash_wheel <-
+  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
+                    range = "A2:N408") %>% 
+  drop_na() %>% 
+  janitor::clean_names() %>% 
+  rename(volume_cu_yds = volume_cubic_yards) %>% 
+  mutate(sports_balls = round(sports_balls, 0))
 
 ```
+
+
+
