@@ -1,0 +1,17 @@
+---
+title: "p8105_hw2_jae2186"
+author: "jae2186 (Jennifer Estrada)"
+date: "10/10/2021"
+output:
+  github_document
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+```
+
+## Problem 1
+```{r setup, include=FALSE}
+
+```
