@@ -8,7 +8,6 @@ output:
 
 ```{r setup, include=FALSE}
 library(tidyverse)
-
 ```
 
 ## Problem 1
@@ -31,10 +30,9 @@ trash_wheel <-
   drop_na() %>% 
   janitor::clean_names() %>% 
   rename(volume_cu_yds = volume_cubic_yards) %>% 
-  mutate(sports_balls = round(sports_balls, 0))
-
+  mutate(sports_balls = round(sports_balls, 0)) 
+ 
 ```
-
 
 The following code chunk reads, cleans, and combines precipitation data availble for 2018 and 2019.
 
@@ -64,6 +62,22 @@ all_precip <- bind_rows(precip2018, precip2019)
 
 ```
 
+In the dataset first presented describes the trash collected by Mr. Trashwheel from 2018 through 2019, taking in `r length(trash_wheel$dumpster)` dumpsters with an average of `r mean(trash_wheel$weight_tons)` tons of trash per dumpster, ulitmately collecting a  total of `r sum(trash_wheel$weight_tons)` tons of trash over the course of these 18 months.
 
+Some quick statistics on the weather conditions and trash collected:
 
+* <b>Precipitation</b>: Total precipitation in 2018 was `r sum(precip2018$precip_in)` inches. For the first half of 2019 precipitation was `r sum(precip2019$precip_in)` inches. A total of `r sum(all_precip$precip_in)` inches of precipitation fell over the 18-month observation period noted here.
 
+* <b>Plastic bottles</b>: There were a over `r round(sum(trash_wheel$plastic_bottles)/10^6, 2)` million plastic bottles collected with a mean of `r round(mean(trash_wheel$plastic_bottles), 0)` plastic bottles per dumpster.
+
+* <b>Glass bottles</b>: Comparatively there were only a total of `r sum(trash_wheel$glass_bottles)` glass bottles collected with a mean of `r round(mean(trash_wheel$glass_bottles), 2)` glass bottles per dumpster.
+
+* <b> Sports balls</b>: Per dumpster there were an average of `r round(mean(trash_wheel$sports_balls), 2)` sports balls collected by Mr. Trashwheel during this time. When broken down by years:
+
+  * In 2014 there were an average of `r round(mean(filter(trash_wheel, year == "2014")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2014")$sports_balls)` sports balls),
+  * In 2015 there were an average of `r round(mean(filter(trash_wheel, year == "2015")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2015")$sports_balls)` sports balls),
+  * In 2015 there were an average of `r round(mean(filter(trash_wheel, year == "2016")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2016")$sports_balls)` sports balls),
+  * In 2015 there were an average of `r round(mean(filter(trash_wheel, year == "2017")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2017")$sports_balls)` sports balls),
+  * In 2018 there were an average of `r round(mean(filter(trash_wheel, year == "2018")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2018")$sports_balls)` sports balls),
+  * <b>And in 2019 there were an average of `r round(mean(filter(trash_wheel, year == "2019")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2019")$sports_balls)` sports balls).</b>
+  
