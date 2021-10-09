@@ -12,7 +12,7 @@ library(tidyverse)
 
 ## Problem 1
 
-The following code chunk uploads the publicly available data of Mr. Trashwheel from May 2014 through June 2019 in an Excel spreadsheet format. 
+The following code chunk uploads the publicly available data of Mr. Trashwheel from May 2014 through January 2021 in an Excel spreadsheet format. 
 
 The following changes have been made to the dataset:
 
@@ -25,8 +25,8 @@ The following changes have been made to the dataset:
 ```{r datat_setup}
 
 trash_wheel <-
-  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
-                    range = "A2:N408") %>% 
+  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+                    range = "A2:N535") %>% 
   drop_na() %>% 
   janitor::clean_names() %>% 
   rename(volume_cu_yds = volume_cubic_yards) %>% 
@@ -39,9 +39,9 @@ The following code chunk reads, cleans, and combines precipitation data availble
 ```{r precip_data}
 
 precip2019 <-
-  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
-                    range = "A2:B15",
-                    sheet = 4)  %>% 
+  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+                    range = "A2:B14",
+                    sheet = 6)  %>% 
   janitor::clean_names() %>% 
   drop_na() %>% 
   rename(precip_in = total) %>% 
@@ -49,8 +49,8 @@ precip2019 <-
   relocate(year)
 
 precip2018 <-
-  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-8-6-19.xlsx", 
-                    range = "A2:B15",
+  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+                    range = "A2:B14",
                     sheet = 5)  %>% 
   janitor::clean_names() %>% 
   drop_na() %>% 
@@ -62,15 +62,15 @@ all_precip <- bind_rows(precip2018, precip2019)
 
 ```
 
-In the dataset first presented describes the trash collected by Mr. Trashwheel from 2018 through 2019, taking in `r length(trash_wheel$dumpster)` dumpsters with an average of `r mean(trash_wheel$weight_tons)` tons of trash per dumpster, ulitmately collecting a  total of `r sum(trash_wheel$weight_tons)` tons of trash over the course of these 18 months.
+The dataset first presented describes the trash collected by Mr. Trashwheel from mid-May 2014 through January 2021, taking in `r length(trash_wheel$dumpster)` dumpsters with an average of `r mean(trash_wheel$weight_tons)` tons of trash per dumpster, ultimately collecting a  total of `r sum(trash_wheel$weight_tons)` tons of trash over the course of these years.
 
 Some quick statistics on the weather conditions and trash collected:
 
-* <b>Precipitation</b>: Total precipitation in 2018 was `r sum(precip2018$precip_in)` inches. For the first half of 2019 precipitation was `r sum(precip2019$precip_in)` inches. A total of `r sum(all_precip$precip_in)` inches of precipitation fell over the 18-month observation period noted here.
+* <b>Precipitation</b>: Total precipitation in 2018 was `r sum(precip2018$precip_in)` inches. For 2019 precipitation was `r sum(precip2019$precip_in)` inches. A total of `r sum(all_precip$precip_in)` inches of precipitation fell over the 2-year observation period noted here.
 
 * <b>Plastic bottles</b>: There were a over `r round(sum(trash_wheel$plastic_bottles)/10^6, 2)` million plastic bottles collected with a mean of `r round(mean(trash_wheel$plastic_bottles), 0)` plastic bottles per dumpster.
 
-* <b>Glass bottles</b>: Comparatively there were only a total of `r sum(trash_wheel$glass_bottles)` glass bottles collected with a mean of `r round(mean(trash_wheel$glass_bottles), 2)` glass bottles per dumpster.
+* <b>Glass bottles</b>: Comparatively there were only a total of `r formatC(sum(trash_wheel$glass_bottles), format= "d", digits =2)` glass bottles collected with a mean of `r round(mean(trash_wheel$glass_bottles), 2)` glass bottles per dumpster.
 
 * <b> Sports balls</b>: Per dumpster there were an average of `r round(mean(trash_wheel$sports_balls), 2)` sports balls collected by Mr. Trashwheel during this time. When broken down by years:
 
@@ -79,5 +79,35 @@ Some quick statistics on the weather conditions and trash collected:
   * In 2015 there were an average of `r round(mean(filter(trash_wheel, year == "2016")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2016")$sports_balls)` sports balls),
   * In 2015 there were an average of `r round(mean(filter(trash_wheel, year == "2017")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2017")$sports_balls)` sports balls),
   * In 2018 there were an average of `r round(mean(filter(trash_wheel, year == "2018")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2018")$sports_balls)` sports balls),
-  * <b>And in 2019 there were an average of `r round(mean(filter(trash_wheel, year == "2019")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2019")$sports_balls)` sports balls).</b>
+  * <b>In 2019 there were an average of `r round(mean(filter(trash_wheel, year == "2019")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2019")$sports_balls)` sports balls),</b>
+  * And in 2020 there were an average of `r round(mean(filter(trash_wheel, year == "2020")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2020")$sports_balls)` sports balls),
   
+
+
+## Problem 2
+
+Using the data from FiveThirtyEight looking at political party and economics measures, 
+
+```{r}
+
+pols_month <-
+  read_csv("./pols-month.csv") %>% 
+  janitor::clean_names() %>% 
+  separate(mon, c("year","month","day")) %>% 
+  select(-day) %>% 
+  mutate (month = month.name[month])
+
+```
+
+create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable.
+
+Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that year and month are the leading columns.
+
+Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
+
+Join the datasets by merging snp into pols, and merging unemployment into the result.
+
+Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
+
+Note: we could have used a date variable as a key instead of creating year and month keys; doing so would help with some kinds of plotting, and be a more accurate representation of the data. Date formats are tricky, though. For more information check out the lubridate package in the tidyverse.
+
