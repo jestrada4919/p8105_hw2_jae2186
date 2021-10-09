@@ -8,6 +8,7 @@ output:
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(DataCombine)
 ```
 
 ## Problem 1
@@ -147,3 +148,54 @@ The second data set then provided dates and closing values for the Standard & Po
 The third dataset provided the monthly rates of umemployment, covering `r length(unemploy$year)` months of data, starting in `r unemploy$month[1]` `r min(unemploy$year)` and going until `r unemploy$month[length(unemploy$month)]` `r max(unemploy$year)`.
 
 ## Problem 3
+
+The following produces a table of the rank of popularity of the name "Olivia" over time as taken from the NYC Open data on the popularity of baby names. 
+
+
+```{r cleaning_data, message=FALSE, warning=FALSE}
+replace_eth <- 
+  tibble(from = c("ASIAN AND PACI", 
+                  "BLACK NON HISP",
+                  "WHITE NON HISP"), 
+         to = c("ASIAN AND PACIFIC ISLANDER", 
+                "BLACK NON HISPANIC",
+                "WHITE NON HISPANIC"))
+
+baby_names <-
+  read_csv("./data/Popular_Baby_Names.csv") %>% 
+  janitor::clean_names() %>% 
+  distinct() %>% 
+  mutate(ethnicity = replace(ethnicity, 
+                             ethnicity == "ASIAN AND PACI", 
+                             "ASIAN AND PACIFIC ISLANDER"),
+         ethnicity = replace(ethnicity, 
+                             ethnicity == "BLACK NON HISP", 
+                             "BLACK NON HISPANIC"),
+         ethnicity = replace(ethnicity, 
+                             ethnicity == "WHITE NON HISP", 
+                             "WHITE NON HISPANIC"))
+```
+
+
+```{r olivia}
+olivia <-
+  filter(baby_names, childs_first_name == "Olivia") %>% 
+  select(-gender, -childs_first_name, -count) %>% 
+  pivot_wider(names_from = year_of_birth, values_from = rank)
+olivia
+```
+
+
+```{r male_no1}
+male_no1 <-
+  filter(baby_names, gender == "MALE" & rank == 1) %>% 
+  select(-gender, - count, -rank) %>% 
+    pivot_wider(names_from = year_of_birth, values_from = childs_first_name)
+
+male_no1
+```
+
+
+
+Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis).
+
