@@ -86,26 +86,49 @@ Some quick statistics on the weather conditions and trash collected:
 
 ## Problem 2
 
+
 Using the data from FiveThirtyEight looking at political party and economics measures, 
 
 ```{r}
-
 pols_month <-
   read_csv("./pols-month.csv") %>% 
-  janitor::clean_names() %>% 
-  separate(mon, c("year","month","day")) %>% 
+  mutate(year = 0, month = 0, day = 0) %>% 
+  separate(mon, c("year", "month", "day")) %>% 
+  mutate(month = as.numeric(month), month = month.name[month], 
+         year = as.numeric(year),
+         prez = ifelse (prez_gop > 0, "gop", "dem")) %>% 
+  select(-day, -prez_gop, -prez_dem) %>% 
+  relocate(year, month, prez)
+
+snp <-
+  read_csv("./snp.csv") %>% 
+  separate(date, c("month", "day", "year")) %>% 
   select(-day) %>% 
-  mutate (month = month.name[month])
+  mutate(month = as.numeric(month), month = month.name[month],
+         year = as.numeric(year), 
+         year = ifelse(year <50, year + 2000, year + 1900)) %>% 
+  relocate(year, month) %>% 
+  as.numeric(year)
+
+unemploy <-
+  read_csv("./unemployment.csv") %>% 
+  rename(year = Year, 
+         January = Jan, February = Feb, March = Mar, April = Apr,
+         May = May, June = Jun, July = Jul, August = Aug, 
+         September = Sep, October = Oct, November = Nov, 
+         December = Dec) %>% 
+  pivot_longer(January:December) %>%
+  mutate(year = as.numeric(year)) %>%
+  rename(month = name) %>% 
+  arrange(year)
+
+pol_unemploy <- 
+  left_join(pols_month, snp) %>% 
+  left_join(unemploy)
 
 ```
 
-create a president variable taking values gop and dem, and remove prez_dem and prez_gop; and remove the day variable.
-
-Second, clean the data in snp.csv using a similar process to the above. For consistency across datasets, arrange according to year and month, and organize so that year and month are the leading columns.
-
-Third, tidy the unemployment data so that it can be merged with the previous datasets. This process will involve switching from “wide” to “long” format; ensuring that key variables have the same name; and ensuring that key variables take the same values.
-
-Join the datasets by merging snp into pols, and merging unemployment into the result.
+The first data set entitled `pols_month` provided detailed information on the political party affiliation with regards to political leaders in various branches of government within the United States. The data provided the breakdown of political affiliation (i.e. either republican party noted as 'gop' or democratic party noted as 'dem') for the president as well as giving total counts for the number of senators, governors, and house representatives affiliated with each party. The data provided monthly information on this political party breakdown, covering `r length(pols_month$year)`, starting `r min(pols_month$year)` until `r max(pols_month$year)`.
 
 Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
 
