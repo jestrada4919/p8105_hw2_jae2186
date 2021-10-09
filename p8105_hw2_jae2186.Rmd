@@ -25,7 +25,7 @@ The following changes have been made to the dataset:
 ```{r datat_setup}
 
 trash_wheel <-
-  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+  readxl::read_xlsx("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
                     range = "A2:N535") %>% 
   drop_na() %>% 
   janitor::clean_names() %>% 
@@ -39,7 +39,7 @@ The following code chunk reads, cleans, and combines precipitation data availble
 ```{r precip_data}
 
 precip2019 <-
-  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+  readxl::read_xlsx("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
                     range = "A2:B14",
                     sheet = 6)  %>% 
   janitor::clean_names() %>% 
@@ -49,7 +49,7 @@ precip2019 <-
   relocate(year)
 
 precip2018 <-
-  readxl::read_xlsx("./Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
+  readxl::read_xlsx("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
                     range = "A2:B14",
                     sheet = 5)  %>% 
   janitor::clean_names() %>% 
@@ -91,7 +91,7 @@ Using the data from FiveThirtyEight looking at political party and economics mea
 
 ```{r pols_month, message=FALSE}
 pols_month <-
-  read_csv("./pols-month.csv") %>% 
+  read_csv("./data/pols-month.csv") %>% 
   mutate(year = 0, month = 0, day = 0) %>% 
   separate(mon, c("year", "month", "day")) %>% 
   mutate(month = as.numeric(month), month = month.name[month], 
@@ -104,7 +104,7 @@ pols_month <-
 
 ```{r snp, message=FALSE}
 
-snp <- read_csv("./snp.csv") %>% 
+snp <- read_csv("./data/snp.csv") %>% 
   separate(date, c('month', 'day', 'year'), '/') %>% 
   select(-day) %>% 
   mutate(year = as.numeric(year), 
@@ -118,7 +118,7 @@ snp <- read_csv("./snp.csv") %>%
 
 ```{r unemployment, message=FALSE}
 unemploy <-
-  read_csv("./unemployment.csv") %>% 
+  read_csv("./data/unemployment.csv") %>% 
   rename(year = Year, 
          January = Jan, February = Feb, 
          March = Mar, April = Apr,
@@ -145,3 +145,5 @@ The first dataset entitled `pols_month` provided detailed information on the pol
 The second data set then provided dates and closing values for the Standard & Poor’s stock market index (S&P) with `r length(snp$year)` monthly values (taken on the 15th of each month) that started in `r snp$month[1]` `r min(snp$year)` and going until `r snp$month[length(snp$month)]` `r max(snp$year)`.
 
 The third dataset provided the monthly rates of umemployment, covering `r length(unemploy$year)` months of data, starting in `r unemploy$month[1]` `r min(unemploy$year)` and going until `r unemploy$month[length(unemploy$month)]` `r max(unemploy$year)`.
+
+## Problem 3
