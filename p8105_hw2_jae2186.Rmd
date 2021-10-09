@@ -89,7 +89,7 @@ Some quick statistics on the weather conditions and trash collected:
 
 Using the data from FiveThirtyEight looking at political party and economics measures, 
 
-```{r}
+```{r pols_month, message=FALSE}
 pols_month <-
   read_csv("./pols-month.csv") %>% 
   mutate(year = 0, month = 0, day = 0) %>% 
@@ -99,38 +99,49 @@ pols_month <-
          prez = ifelse (prez_gop > 0, "gop", "dem")) %>% 
   select(-day, -prez_gop, -prez_dem) %>% 
   relocate(year, month, prez)
+```
 
-snp <-
-  read_csv("./snp.csv") %>% 
-  separate(date, c("month", "day", "year")) %>% 
+
+```{r snp, message=FALSE}
+
+snp <- read_csv("./snp.csv") %>% 
+  separate(date, c('month', 'day', 'year'), '/') %>% 
   select(-day) %>% 
-  mutate(month = as.numeric(month), month = month.name[month],
-         year = as.numeric(year), 
-         year = ifelse(year <50, year + 2000, year + 1900)) %>% 
-  relocate(year, month) %>% 
-  as.numeric(year)
+  mutate(year = as.numeric(year), 
+         month = as.numeric(month),
+         month = month.name[month],
+         year = ifelse(year < 50, year + 2000, year + 1900)) %>% 
+  relocate(year, month)
 
+```
+
+
+```{r unemployment, message=FALSE}
 unemploy <-
   read_csv("./unemployment.csv") %>% 
   rename(year = Year, 
-         January = Jan, February = Feb, March = Mar, April = Apr,
-         May = May, June = Jun, July = Jul, August = Aug, 
-         September = Sep, October = Oct, November = Nov, 
-         December = Dec) %>% 
+         January = Jan, February = Feb, 
+         March = Mar, April = Apr,
+         May = May, June = Jun, 
+         July = Jul, August = Aug, 
+         September = Sep, October = Oct, 
+         November = Nov, December = Dec) %>% 
   pivot_longer(January:December) %>%
   mutate(year = as.numeric(year)) %>%
   rename(month = name) %>% 
   arrange(year)
+```
 
+
+```{r joining, message=FALSE}
 pol_unemploy <- 
   left_join(pols_month, snp) %>% 
   left_join(unemploy)
 
 ```
 
-The first data set entitled `pols_month` provided detailed information on the political party affiliation with regards to political leaders in various branches of government within the United States. The data provided the breakdown of political affiliation (i.e. either republican party noted as 'gop' or democratic party noted as 'dem') for the president as well as giving total counts for the number of senators, governors, and house representatives affiliated with each party. The data provided monthly information on this political party breakdown, covering `r length(pols_month$year)`, starting `r min(pols_month$year)` until `r max(pols_month$year)`.
+The first dataset entitled `pols_month` provided detailed information on the political party affiliation with regards to political leaders in various branches of government within the United States. The data provided the breakdown of political affiliation (i.e. either republican party noted as 'gop' or democratic party noted as 'dem') for the president as well as giving total counts for the number of senators (`sen_gop` or `sen_dem`), governors (`gov_gop` or `gov_dem`), and house representatives (`rep_gop` or `rep_dem`) affiliated with each party. The data provided monthly information on this political party breakdown, covering `r length(pols_month$year)` months, starting in `r pols_month$month[1]` `r min(pols_month$year)` and going until `r pols_month$month[length(pols_month$month)]` `r max(pols_month$year)`.
 
-Write a short paragraph about these datasets. Explain briefly what each dataset contained, and describe the resulting dataset (e.g. give the dimension, range of years, and names of key variables).
+The second data set then provided dates and closing values for the Standard & Poor’s stock market index (S&P) with `r length(snp$year)` monthly values (taken on the 15th of each month) that started in `r snp$month[1]` `r min(snp$year)` and going until `r snp$month[length(snp$month)]` `r max(snp$year)`.
 
-Note: we could have used a date variable as a key instead of creating year and month keys; doing so would help with some kinds of plotting, and be a more accurate representation of the data. Date formats are tricky, though. For more information check out the lubridate package in the tidyverse.
-
+The third dataset provided the monthly rates of umemployment, covering `r length(unemploy$year)` months of data, starting in `r unemploy$month[1]` `r min(unemploy$year)` and going until `r unemploy$month[length(unemploy$month)]` `r max(unemploy$year)`.
