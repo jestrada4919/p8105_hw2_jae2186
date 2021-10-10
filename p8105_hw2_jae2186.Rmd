@@ -195,6 +195,20 @@ male_no1 <-
 male_no1
 ```
 
+```{r scatterplot}
+
+wnh_names <-
+  filter(baby_names, gender == "MALE" 
+         & ethnicity == "WHITE NON HISPANIC" 
+         & year_of_birth == 2016) %>% 
+  select(-gender, -ethnicity, -year_of_birth)
+
+ggplot(wnh_names, aes(rank, count)) + 
+  geom_point() +
+  labs(caption = "Figure 1. Count v. Rank for Names of Male, White Non-Hispanic Males Born in 2016 in NYC", x = "Name Rank", y = "Number of Children")
+ggsave("p8105_hw2_p3_jae2186.pdf")
+
+```
 
 
 Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis).
