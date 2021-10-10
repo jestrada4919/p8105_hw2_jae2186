@@ -13,9 +13,9 @@ library(DataCombine)
 
 ## Problem 1
 
-The following code chunk uploads the publicly available data of Mr. Trashwheel from May 2014 through January 2021 in an Excel spreadsheet format. 
+The following code chunk uploads the publicly available data of Mr. Trashwheel from May 2014 through January 2021 and taken from an Excel spreadsheet. 
 
-The following changes have been made to the dataset:
+The following changes have been made to the data set:
 
 * non-data entries are omitted (i.e. rows with notes/figures and columns containing notes),
 * reasonable variable names have been applied, 
@@ -52,7 +52,7 @@ precip2019 <-
 precip2018 <-
   readxl::read_xlsx("./data/Trash-Wheel-Collection-Totals-7-2020-2.xlsx", 
                     range = "A2:B14",
-                    sheet = 5)  %>% 
+                    sheet = 7)  %>% 
   janitor::clean_names() %>% 
   drop_na() %>% 
   rename(precip_in = total) %>% 
@@ -63,7 +63,7 @@ all_precip <- bind_rows(precip2018, precip2019)
 
 ```
 
-The dataset first presented describes the trash collected by Mr. Trashwheel from mid-May 2014 through January 2021, taking in `r length(trash_wheel$dumpster)` dumpsters with an average of `r mean(trash_wheel$weight_tons)` tons of trash per dumpster, ultimately collecting a  total of `r sum(trash_wheel$weight_tons)` tons of trash over the course of these years.
+The data set first presented describes the trash collected by Mr. Trashwheel from mid-May 2014 through January 2021, taking in `r length(trash_wheel$dumpster)` dumpsters with an average of `r mean(trash_wheel$weight_tons)` tons of trash per dumpster, ultimately collecting a  total of `r sum(trash_wheel$weight_tons)` tons of trash over the course of these years.
 
 Some quick statistics on the weather conditions and trash collected:
 
@@ -73,22 +73,16 @@ Some quick statistics on the weather conditions and trash collected:
 
 * <b>Glass bottles</b>: Comparatively there were only a total of `r formatC(sum(trash_wheel$glass_bottles), format= "d", digits =2)` glass bottles collected with a mean of `r round(mean(trash_wheel$glass_bottles), 2)` glass bottles per dumpster.
 
-* <b> Sports balls</b>: Per dumpster there were an average of `r round(mean(trash_wheel$sports_balls), 2)` sports balls collected by Mr. Trashwheel during this time. When broken down by years:
+* <b> Sports balls</b>: Per dumpster there were an average of `r round(mean(trash_wheel$sports_balls), 2)` sports balls collected by Mr. Trashwheel during this time. When broken down for recent years:
 
-  * In 2014 there were an average of `r round(mean(filter(trash_wheel, year == "2014")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2014")$sports_balls)` sports balls),
-  * In 2015 there were an average of `r round(mean(filter(trash_wheel, year == "2015")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2015")$sports_balls)` sports balls),
-  * In 2015 there were an average of `r round(mean(filter(trash_wheel, year == "2016")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2016")$sports_balls)` sports balls),
-  * In 2015 there were an average of `r round(mean(filter(trash_wheel, year == "2017")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2017")$sports_balls)` sports balls),
-  * In 2018 there were an average of `r round(mean(filter(trash_wheel, year == "2018")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2018")$sports_balls)` sports balls),
-  * <b>In 2019 there were an average of `r round(mean(filter(trash_wheel, year == "2019")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2019")$sports_balls)` sports balls),</b>
-  * And in 2020 there were an average of `r round(mean(filter(trash_wheel, year == "2020")$sports_balls),2)`  sports balls collected (median of `r median(filter(trash_wheel, year == "2020")$sports_balls)` sports balls),
+  * In 2018 there were an average of `r round(mean(filter(trash_wheel, year == "2018")$sports_balls),2)`  sports balls collected per dumpster (median of `r median(filter(trash_wheel, year == "2018")$sports_balls)` sports balls),
+  * <b>In 2019 there were an average of `r round(mean(filter(trash_wheel, year == "2019")$sports_balls),2)`  sports balls collected per dumpster (median of `r median(filter(trash_wheel, year == "2019")$sports_balls)` sports balls),</b>
+  * And in 2020 there were an average of `r round(mean(filter(trash_wheel, year == "2020")$sports_balls),2)` sports balls collected per dumpster (median of `r median(filter(trash_wheel, year == "2020")$sports_balls)` sports balls),
   
-
 
 ## Problem 2
 
-
-Using the data from FiveThirtyEight looking at political party and economics measures, 
+Data  from FiveThirtyEight looking at political party and economics measures is uploaded in respective code chunks:
 
 ```{r pols_month, message=FALSE}
 pols_month <-
@@ -141,25 +135,17 @@ pol_unemploy <-
 
 ```
 
-The first dataset entitled `pols_month` provided detailed information on the political party affiliation with regards to political leaders in various branches of government within the United States. The data provided the breakdown of political affiliation (i.e. either republican party noted as 'gop' or democratic party noted as 'dem') for the president as well as giving total counts for the number of senators (`sen_gop` or `sen_dem`), governors (`gov_gop` or `gov_dem`), and house representatives (`rep_gop` or `rep_dem`) affiliated with each party. The data provided monthly information on this political party breakdown, covering `r length(pols_month$year)` months, starting in `r pols_month$month[1]` `r min(pols_month$year)` and going until `r pols_month$month[length(pols_month$month)]` `r max(pols_month$year)`.
+The first data set entitled `pols_month` provided detailed information on the political party affiliation with regards to political leaders in various branches of government within the United States. The data provided the breakdown of political affiliation (i.e. either republican party noted as 'gop' or democratic party noted as 'dem') for the president as well as giving total counts for the number of senators (`sen_gop` or `sen_dem`), governors (`gov_gop` or `gov_dem`), and house representatives (`rep_gop` or `rep_dem`) affiliated with each party. The data provided monthly information on this political party breakdown, covering `r length(pols_month$year)` months, starting in `r pols_month$month[1]` `r min(pols_month$year)` and going until `r pols_month$month[length(pols_month$month)]` `r max(pols_month$year)`.
 
-The second data set then provided dates and closing values for the Standard & Poor’s stock market index (S&P) with `r length(snp$year)` monthly values (taken on the 15th of each month) that started in `r snp$month[1]` `r min(snp$year)` and going until `r snp$month[length(snp$month)]` `r max(snp$year)`.
+The second data set then provided dates and closing values (as `close`) for the Standard & Poor’s stock market index (S&P) with `r length(snp$year)` monthly values (taken on the 15th of each month) that started in `r snp$month[1]` `r min(snp$year)` and going until `r snp$month[length(snp$month)]` `r max(snp$year)`.
 
-The third dataset provided the monthly rates of umemployment, covering `r length(unemploy$year)` months of data, starting in `r unemploy$month[1]` `r min(unemploy$year)` and going until `r unemploy$month[length(unemploy$month)]` `r max(unemploy$year)`.
+The third data set provided the monthly rates of umemployment, covering `r length(unemploy$year)` months of data, starting in `r unemploy$month[1]` `r min(unemploy$year)` and going until `r unemploy$month[length(unemploy$month)]` `r max(unemploy$year)`.
 
 ## Problem 3
 
-The following produces a table of the rank of popularity of the name "Olivia" over time as taken from the NYC Open data on the popularity of baby names. 
-
+The following two code chunks produce a table of the annual rank of popularity of the name "Olivia" with respect to each ethnicity as taken from the NYC Open data on the popularity of baby names. 
 
 ```{r cleaning_data, message=FALSE, warning=FALSE}
-replace_eth <- 
-  tibble(from = c("ASIAN AND PACI", 
-                  "BLACK NON HISP",
-                  "WHITE NON HISP"), 
-         to = c("ASIAN AND PACIFIC ISLANDER", 
-                "BLACK NON HISPANIC",
-                "WHITE NON HISPANIC"))
 
 baby_names <-
   read_csv("./data/Popular_Baby_Names.csv") %>% 
@@ -173,7 +159,8 @@ baby_names <-
                              "BLACK NON HISPANIC"),
          ethnicity = replace(ethnicity, 
                              ethnicity == "WHITE NON HISP", 
-                             "WHITE NON HISPANIC"))
+                             "WHITE NON HISPANIC")) %>% 
+  arrange(year_of_birth)
 ```
 
 
@@ -182,9 +169,11 @@ olivia <-
   filter(baby_names, childs_first_name == "Olivia") %>% 
   select(-gender, -childs_first_name, -count) %>% 
   pivot_wider(names_from = year_of_birth, values_from = rank)
+
 olivia
 ```
 
+Similarly, the following code chunk results in a table providing by ethnicity the top names for each year from 2011 to 2016.
 
 ```{r male_no1}
 male_no1 <-
@@ -194,6 +183,8 @@ male_no1 <-
 
 male_no1
 ```
+
+This last code chunk produces a scatter plot specifically looking at male, white non-Hispanic children born in 2016 in NYC and how the frequency of a name given to someone in this group compares to the name's rank. 
 
 ```{r scatterplot}
 
@@ -205,11 +196,9 @@ wnh_names <-
 
 ggplot(wnh_names, aes(rank, count)) + 
   geom_point() +
-  labs(caption = "Figure 1. Count v. Rank for Names of Male, White Non-Hispanic Males Born in 2016 in NYC", x = "Name Rank", y = "Number of Children")
+  labs(caption = "Figure 1. Count v. Rank for Names of Male, White Non-Hispanic Males Born in 2016 in NYC", x = "Name Rank", y = "Name Frequency")
+
 ggsave("p8105_hw2_p3_jae2186.pdf")
 
 ```
-
-
-Finally, for male, white non-hispanic children born in 2016, produce a scatter plot showing the number of children with a name (y axis) against the rank in popularity of that name (x axis).
 
